@@ -34,4 +34,9 @@ public BankAccount bankAccount(@PathVariable String id ){
         return  bar.save(account);
     }
 
+    @DeleteMapping("/bankAccounts/{id}")
+    public void update(@PathVariable String id){
+          bar.deleteById(id);
+    }
+
 }
