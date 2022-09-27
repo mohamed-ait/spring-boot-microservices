@@ -5,7 +5,10 @@ import org.sid.bankaccountservice.entities.BankAccount;
 import org.sid.bankaccountservice.repositories.BankAccountRepository;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Date;
 import java.util.List;
+import java.util.UUID;
+@RequestMapping("api")
 @RestController
 public class AccountRestController {
     BankAccountRepository bar;
@@ -22,6 +25,8 @@ public BankAccount bankAccount(@PathVariable String id ){
 }
 @PostMapping("/bankAccounts")
     public BankAccount save( @RequestBody BankAccount ba){
+        if(ba.getId()==null)ba.setId(UUID.randomUUID().toString());
+        ba.setCreatedAt(new Date());
         return  bar.save(ba);
 }
     @PutMapping("/bankAccounts/{id}")
@@ -35,7 +40,7 @@ public BankAccount bankAccount(@PathVariable String id ){
     }
 
     @DeleteMapping("/bankAccounts/{id}")
-    public void update(@PathVariable String id){
+    public void deleteAccount(@PathVariable String id){
           bar.deleteById(id);
     }
 
