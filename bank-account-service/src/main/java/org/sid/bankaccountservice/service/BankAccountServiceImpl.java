@@ -4,6 +4,7 @@ import io.swagger.v3.oas.annotations.servers.Server;
 import org.sid.bankaccountservice.dtos.BankAccountRequestDTO;
 import org.sid.bankaccountservice.dtos.BankAccountResponseDTO;
 import org.sid.bankaccountservice.entities.BankAccount;
+import org.sid.bankaccountservice.mappers.AccountMapper;
 import org.sid.bankaccountservice.repositories.BankAccountRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -17,23 +18,13 @@ import java.util.UUID;
 public class BankAccountServiceImpl implements BankAccountService {
     @Autowired
     BankAccountRepository bar;
+    @Autowired
+    AccountMapper accountMapper;
     @Override
     public BankAccountResponseDTO addAccount(BankAccountRequestDTO bankAccountRequestDTO) {
-        BankAccount bankAccount=BankAccount.builder()
-                .id(UUID.randomUUID().toString())
-                .createdAt(new Date())
-                .balance(bankAccountRequestDTO.getBalance())
-                .currency(bankAccountRequestDTO.getCurrency())
-                .type(bankAccountRequestDTO.getType())
-                .build();
+        BankAccount bankAccount=accountMapper.fromBankAccountRequestDTO(bankAccountRequestDTO);
      bar.save(bankAccount);
-     BankAccountResponseDTO bankAccountResponseDTO=BankAccountResponseDTO.builder()
-             .id(bankAccount.getId())
-             .balance(bankAccount.getBalance())
-             .createdAt(bankAccount.getCreatedAt())
-             .currency(bankAccount.getCurrency())
-             .type(bankAccount.getType())
-             .build();
+     BankAccountResponseDTO bankAccountResponseDTO=accountMapper.fromBankAccount(bankAccount);
         return bankAccountResponseDTO;
     }
 }
